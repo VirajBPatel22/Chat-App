@@ -46,9 +46,9 @@ mongoose.connect(mongoURL)
   });
 
 // Routes
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
+// app.get('/', (req, res) => {
+//   res.send('Hello, World!');
+// });
 
 // Start the server
 app.listen(port, () => {
