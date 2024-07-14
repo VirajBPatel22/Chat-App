@@ -5,7 +5,7 @@ import Logo from "../assets/logo.svg";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-// import { registerRoute } from '../utills/APIRoutes';
+import { registerRoute } from '../utils/APIRoutes';
 
 function Register() {
   const navigate = useNavigate();
@@ -44,30 +44,31 @@ function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    handleValidation();
-    // if (handleValidation()) {
-    //   const { password, username, email } = values;
-    //   try {
-    //     const { data } = await axios.post(registerRoute, {
-    //       username,
-    //       email,
-    //       password,
-    //     });
-    //     if(data.status===false){
-    //       toast.error(data.msg,toastOptions);
-    //     }
-    //     if(data.status===true){
-    //       localStorage.setItem(`chat-app-user',Json.stringify(data.user)`);
-    //       navigate("/");
+    // handleValidation();
+    if (handleValidation()) {
+      console.log("in validation",registerRoute);
+      const { password, username, email } = values;
+      try {
+        const { data } = await axios.post(registerRoute, {
+          username,
+          email,
+          password,
+        });
+        // if(data.status===false){
+        //   toast.error(data.msg,toastOptions);
         // }
-        //// alert("form");
+        // if(data.status===true){
+        //   localStorage.setItem(`chat-app-user',Json.stringify(data.user)`);
+        //   navigate("/");
+        // }
+        // // alert("form");
         // console.log(data);
         // Handle success response
-    //   } catch (error) {
-    //     console.error(error);
-    //     toast.error("Registration failed. Please try again.", toastOptions);
-    //   }
-    // }
+      } catch (error) {
+        console.error(error);
+        toast.error("Registration failed. Please try again.", toastOptions);
+      }
+    }
   };
 
   const handleChange = (event) => {
