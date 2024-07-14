@@ -40,11 +40,9 @@ function Register() {
       return false;
     }
     return true;
-  };
-
+  };  
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // handleValidation();
     if (handleValidation()) {
       console.log("in validation",registerRoute);
       const { password, username, email } = values;
@@ -54,17 +52,15 @@ function Register() {
           email,
           password,
         });
-        // if(data.status===false){
-        //   toast.error(data.msg,toastOptions);
-        // }
-        // if(data.status===true){
-        //   localStorage.setItem(`chat-app-user',Json.stringify(data.user)`);
-        //   navigate("/");
-        // }
-        // // alert("form");
-        // console.log(data);
-        // Handle success response
-      } catch (error) {
+        if(data.status===false){
+          toast.error(data.msg,toastOptions);
+        }
+        if(data.status===true){
+          // localStorage.setItem("chat-app-user",Json.stringify(data.user));
+          navigate("/");
+        }
+      } 
+      catch (error) {
         console.error(error);
         toast.error("Registration failed. Please try again.", toastOptions);
       }
