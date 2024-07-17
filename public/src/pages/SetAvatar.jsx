@@ -25,17 +25,14 @@ function SetAvatar() {
     if(!localStorage.getItem('chat-app-user')){
       navigate('/login');
     }
-  },[])
+  },[navigate])
 
   const setProfilePicture = async () => {
     if (selectedAvatar === undefined) {
       toast.error("Please select an avatar", toastOptions);
     } else {
       const user = JSON.parse(localStorage.getItem("chat-app-user"));
-      console.log("User object:", user); // Debugging log
-
-      const userId = user._id; // Assuming _id is now a string
-      console.log("User ID:", userId); // Debugging log
+      const userId = user._id;
 
       if (!userId) {
         toast.error("User ID not found. Please log in again.", toastOptions);
@@ -43,18 +40,27 @@ function SetAvatar() {
       }
 
       try {
-        const { data } = await axios.post(`${setAvatarRoute}/${userId}`, {
-          image: avatars[selectedAvatar],
-        });
+        // Convert the selected avatar to base64 format
+        const response = await fetch(`data:image/svg+xml,${encodeURIComponent(avatars[selectedAvatar])}`);
+        const blob = await response.blob();
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = async () => {
+          const base64data = reader.result;
 
-        if (data.isSet) {
-          user.isAvatarImageSet = true;
-          user.avatarImage = data.image;
-          localStorage.setItem("chat-app-user", JSON.stringify(user));
-          navigate('/');
-        } else {
-          toast.error("Error setting avatar. Please try again", toastOptions);
-        }
+          const { data } = await axios.post(`${setAvatarRoute}/${userId}`, {
+            image: base64data,
+          });
+
+          if (data.isSet) {
+            user.isAvatarImageSet = true;
+            user.avatarImage = data.image;
+            localStorage.setItem("chat-app-user", JSON.stringify(user));
+            navigate('/');
+          } else {
+            toast.error("Error setting avatar. Please try again", toastOptions);
+          }
+        };
       } catch (error) {
         toast.error("Failed to set avatar. Please try again", toastOptions);
       }
